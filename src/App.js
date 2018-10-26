@@ -48,12 +48,18 @@ class App extends Component {
     if(!isLoaded){
       return <img src={Load} alt="loading" className="loading" />;
     }
-    console.log(rateData);
     return (
       <div className="content">
         <h1>Rate Calculator</h1>
-        <Rate rateData = {rateData} currency={currency} changeRate={this.changeRate} />
-        <Calculator rateData = {rateData} currency={currency} inputValue={inputValue} changeInputValue={this.changeInputValue} />
+        <Rate 
+          rateData = {rateData} 
+          currency={currency} 
+          changeRate={this.changeRate} />
+        <Calculator 
+          rateData = {rateData} 
+          currency={currency} 
+          inputValue={inputValue} 
+          changeInputValue={this.changeInputValue} />
         <span className="bicoinSpan" onClick={this.showBitcoin}>{showBitcoin ? "Hide" : "Show"} Bitcoin rate</span>
         {showBitcoin && <Bitcoin />}
       </div>

@@ -7,31 +7,30 @@ export default class Bitcoin extends Component{
 
 		this.state = {
 			bitcoinData : {},
-			count: 0,
+			comparedRate : 0,
 			isLoaded : false
 		}
 
 		this.refreshData = this.refreshData.bind(this)
+		this.fetchData = this.fetchData.bind(this)
 	}
 
 	// fetching bitcoinData from url 
   componentDidMount () { 
-  	let interval = setInterval(() => {
-  		this.setState({ count : this.state.count+1 });
-  	},10000) 
+  	this.fetchData();
+  	setInterval(this.fetchData, 180000) 
+  }
 
-  	if(this.state.count === 0){
-  		this.setState({ isLoaded : false })
-  		this.fetchData();
-  	}
-
-  	if(this.state.count > 0){
-  		this.setState({ count : 0 })
+  // comparing new and old values of bitcoin rate 
+  componentDidUpdate (prevProps, prevState)  { 
+  	let bitcoinValue = this.state.bitcoinData["BTC"]
+  	if( prevState.bitcoinData && prevState.bitcoinData["BTC"] && bitcoinValue !== prevState.bitcoinData["BTC"] ){
+  		this.setState({ comparedRate : Number(bitcoinValue) - Number(prevState.bitcoinData["BTC"]) })
   	}
   }
 
   // clear interval when component unmounted
-  componentWillUnmount() { clearInterval(this.interval); }
+  componentWillUnmount() { clearInterval(this.fetchData,3000); }
 
   // fetching bicoinData after refresh
   refreshData () {
@@ -55,6 +54,7 @@ export default class Bitcoin extends Component{
 		return (
 			<div className="bitcoin">
 				<div>Current Bitcoin Rate: <span>{this.state.isLoaded ? this.state.bitcoinData['BTC'] : <img src={Load} alt="loading" />}</span> <span className="refresh" onClick={this.refreshData} >Refresh</span></div>
+				<p>Bitcoin rate increase compared with the previous one _ <span>{this.state.comparedRate}</span></p>
 				<p>(Bitcoin Rate automatically will be updatedevery 3 minutes)</p>
 			</div>
 		);
